@@ -144,7 +144,7 @@ map.on('load', function() {
 
   // add total population layer
   map.addLayer({
-    'id': 'TOTAL',
+    'id': 'TOTAL ESSENTIAL WORKERS',
     'type': 'fill',
     'source': 'essworkers',
     'layout': {},
@@ -162,84 +162,6 @@ map.on('load', function() {
         20000,
         '#3C5D80',
         25000,
-        '#24374D'
-      ]
-    },
-    'fill-opacity': 0.85
-  })
-
-  // add grocery population layer
-  map.addLayer({
-    'id': 'GROCERY',
-    'type': 'fill',
-    'source': 'essworkers',
-    'layout': {},
-    'paint': {
-      'fill-color': [
-        'interpolate',
-        ['linear'],
-        ['get', 'Grocery'],
-        0,
-        '#CCE6FF',
-        1500,
-        '#8FAECC',
-        2000,
-        '#6289B3',
-        2500,
-        '#3C5D80',
-        3000,
-        '#24374D'
-      ]
-    },
-    'fill-opacity': 0.85
-  })
-
-  // add transit population layer
-  map.addLayer({
-    'id': 'TRANSIT',
-    'type': 'fill',
-    'source': 'essworkers',
-    'layout': {},
-    'paint': {
-      'fill-color': [
-        'interpolate',
-        ['linear'],
-        ['get', 'Transit'],
-        0,
-        '#CCE6FF',
-        500,
-        '#8FAECC',
-        750,
-        '#6289B3',
-        1000,
-        '#3C5D80',
-        1500,
-        '#24374D'
-      ]
-    },
-    'fill-opacity': 0.85
-  })
-
-  // add healthcare population layer
-  map.addLayer({
-    'id': 'HEALTHCARE',
-    'type': 'fill',
-    'source': 'essworkers',
-    'layout': {},
-    'paint': {
-      'fill-color': [
-        'interpolate',
-        ['linear'],
-        ['get', 'Healthcare'],
-        0,
-        '#CCE6FF',
-        5000,
-        '#8FAECC',
-        7000,
-        '#6289B3',
-        8000,
-        '#3C5D80',
-        10000,
         '#24374D'
       ]
     },
@@ -266,7 +188,7 @@ map.on('load', function() {
 
   // add total population layer
   map.addLayer({
-    'id': 'ALOD',
+    'id': 'PERCENT POPULATION VACCINATED',
     'type': 'fill',
     'source': 'vaccinations',
     'layout': {},
@@ -330,9 +252,9 @@ var popup = new mapboxgl.Popup({
 });
 
 map.on('mousemove', function (e) {
-  // query for the features under the mouse, but only in the lots layer
+  // query for the features under the mouse
   var features = map.queryRenderedFeatures(e.point, {
-      layers: ['TOTAL'],
+      layers: ['TOTAL ESSENTIAL WORKERS'],
   });
 
   if (features.length > 0) {
@@ -365,7 +287,7 @@ map.on('mousemove', function (e) {
 })
 
 // enumerate ids of the layers
-var toggleableLayerIds = ['TOTAL', 'GROCERY', 'TRANSIT', 'HEALTHCARE'];
+var toggleableLayerIds = ['TOTAL ESSENTIAL WORKERS', 'PERCENT POPULATION VACCINATED'];
 
 // set up the corresponding toggle button for each layer
 for (var i = 0; i < toggleableLayerIds.length; i++) {
@@ -387,9 +309,15 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
     if (visibility === 'visible') {
       map.setLayoutProperty(clickedLayer, 'visibility', 'none');
       this.className = '';
+      if (clickedLayer === 'TOTAL ESSENTIAL WORKERS') {
+        map.setLayoutProperty('ess-outlines', 'visibility', 'none');
+      } else {map.setLayoutProperty('vacc-outlines', 'visibility', 'none')}
     } else {
       this.className = 'active';
       map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+      if (clickedLayer === 'TOTAL ESSENTIAL WORKERS') {
+        map.setLayoutProperty('ess-outlines', 'visibility', 'visible');
+      } else {map.setLayoutProperty('vacc-outlines', 'visibility', 'visible')}
     }
   };
 
