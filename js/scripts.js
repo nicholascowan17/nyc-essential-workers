@@ -139,7 +139,7 @@ map.on('load', function() {
   // add geojson source for essential Workers
   map.addSource('essworkers', {
     type: 'geojson',
-    data: '/data/essential-workers.geojson'
+    data: '/nyc-essential-workers/data/essential-workers.geojson'
   });
 
   // add total population layer
@@ -183,7 +183,7 @@ map.on('load', function() {
   // add geojson source for essential Workers
   map.addSource('vaccinations', {
     type: 'geojson',
-    data: '/data/VaccinationByZip.geojson'
+    data: '/nyc-essential-workers/data/VaccinationByZip.geojson'
   });
 
   // add total population layer
