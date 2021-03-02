@@ -20,13 +20,16 @@
     <h1>Geographic Inequities in Vaccination of Essential Workers in New York City</h1>
     <p>BY NICHOLAS COWAN</p>
   </div>
+  <div class="subtext">
+    <h2>In New York City, the neighborhoods with the greatest concentrations of essential workers tend to be those on the urban fringes—often low-income, Black and Brown communities with limited transit access. With initial vaccine doses being prioritized for frontline workers and other vulnerable groups, one would expected these communities to be leading in the vaccination campaign; instead, they currently have the lowest vaccination rates, a clear sign of inequitable distributions and racial injustices.</h2>
+  </div>
   <div class="instructions">
-    <h3>Toggle between each layer:</h3>
+    <h3>Toggle between each layer to compare:</h3>
   </div>
   <div class="filters">
     <nav id="menu"></nav>
   </div>
-  <div class="legend">
+  <div class="legend" id="leg1">
     <p class="legend-title">Total Essential Workers</p>
     <div class="color-code">
       <div class="colors" id="c1"></div>
@@ -43,8 +46,8 @@
       <div class="color-label" id="l5">25,000</div>
     </div>
   </div>
-  <!-- <div class="legend">
-    <p class="legend-title">Total Essential Workers</p>
+  <div class="legend" id="leg2">
+    <p class="legend-title">Percent Population Vaccinated with at Least One Dose</p>
     <div class="color-code">
       <div class="colors" id="c1"></div>
       <div class="colors" id="c2"></div>
@@ -53,12 +56,13 @@
       <div class="colors" id="c5"></div>
     </div>
     <div class="color-labels-container">
-      <div class="color-label" id="l1">5,000</div>
-      <div class="color-label" id="l2">10,000</div>
-      <div class="color-label" id="l3">15,000</div>
-      <div class="color-label" id="l4">20,000</div>
-      <div class="color-label" id="l5">25,000</div>
-    </div> -->
+      <div class="color-label" id="l1">0</div>
+      <div class="color-label" id="l2">7.5%</div>
+      <div class="color-label" id="l3">10%</div>
+      <div class="color-label" id="l4">13%</div>
+      <div class="color-label" id="l5">16%</div>
+    </div>
+  </div>
   <div class="inset-footer">
     <p><strong>DATA SOURCES:</strong> IPUMS USA - <a href="https://usa.ipums.org/usa/">2018 ACS 5-Year Estimates</a>;</br>Citywide Immunization Registry - <a href="https://public.tableau.com/profile/integrated.data.team#!/vizhome/COVID-19VaccinationTracker/Dosesadministered">COVID-19 Vaccinations by ZIP Code</a></p>
     <p><strong>NOTE:</strong> Essential worker industry-groups are based off a similar breakdown utilized by the Office of the New York City Comptroller Scott M. Stringer in his <a href="https://comptroller.nyc.gov/wp-content/uploads/documents/Frontline_Workers_032020.pdf">Frontline Worker Report</a></p>

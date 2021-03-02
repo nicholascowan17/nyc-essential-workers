@@ -175,8 +175,8 @@ map.on('load', function() {
     'source': 'essworkers',
     'layout': {},
     'paint': {
-      'line-color': '#ebebeb',
-      'line-width': 0.3
+      'line-color': 'rgba(235, 235, 235, 0.5)',
+      'line-width': 0.2
     }
   });
 
@@ -219,8 +219,8 @@ map.on('load', function() {
     'source': 'vaccinations',
     'layout': {'visibility':'none'},
     'paint': {
-      'line-color': '#ebebeb',
-      'line-width': 0.3
+      'line-color': 'rgba(235, 235, 235, 0.5)',
+      'line-width': 0.2
     }
   });
 
@@ -261,15 +261,14 @@ map.on('mousemove', function (e) {
     // show the popup
     // Populate the popup and set its coordinates based on the feature found.
     var hoveredFeature = features[0]
-    console.log(hoveredFeature)
     if (hoveredFeature.layer.id === 'TOTAL ESSENTIAL WORKERS') {
       var name = PUMALookup(parseInt(hoveredFeature.properties.puma)).neighborhood
       var esspopulation = numberWithCommas(hoveredFeature.properties.EssPop)
 
       var popupContent = `
-        <div>
+        <div class="esspopup">
           <b>${name}</b><br/>
-          Essential Worker Count:${esspopulation}
+          Essential Worker Count: ${esspopulation}
         </div>
       `
 
@@ -281,7 +280,7 @@ map.on('mousemove', function (e) {
       var percalod = hoveredFeature.properties.Perc_ALOD
 
       var popupContent = `
-        <div>
+        <div class="vaccpopup">
           <h4>${name}</br>(Zip Code: ${zip})<h4>
           <p class="popp">Total vaccinated with at least one dose: <b>${alod}</b></p>
           <p class="popp">Percent vaccinated with at least one dose: <b>${percalod}</b>%</p>
@@ -319,7 +318,6 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
     link.className = 'active';
   } else {
     link.className = '';
-    // map.setLayoutProperty('PERCENT POPULATION VACCINATED', 'visibility', 'none');
   }
   link.textContent = id;
 
@@ -332,11 +330,17 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
     //
     map.setLayoutProperty('TOTAL ESSENTIAL WORKERS', 'visibility', 'none');
     map.setLayoutProperty('PERCENT POPULATION VACCINATED', 'visibility', 'none');
-
     $('.active')[0].className = '';
 
     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
     this.className = 'active';
+    if (clickedLayer === 'PERCENT POPULATION VACCINATED') {map.setLayoutProperty('vacc-outlines', 'visibility', 'visible');
+      $('#leg2').show();
+      $('#leg1').hide();
+    } else {map.setLayoutProperty('vacc-outlines', 'visibility', 'none');
+      $('#leg2').hide();
+      $('#leg1').show();
+    }
   };
 
   var layers = document.getElementById('menu');
