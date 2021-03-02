@@ -191,7 +191,7 @@ map.on('load', function() {
     'id': 'PERCENT POPULATION VACCINATED',
     'type': 'fill',
     'source': 'vaccinations',
-    'layout': {},
+    'layout': {'visibility':'none'},
     'paint': {
       'fill-color': [
         'interpolate',
@@ -217,7 +217,7 @@ map.on('load', function() {
     'id': 'vacc-outlines',
     'type': 'line',
     'source': 'vaccinations',
-    'layout': {},
+    'layout': {'visibility':'none'},
     'paint': {
       'line-color': '#ebebeb',
       'line-width': 0.3
@@ -254,25 +254,42 @@ var popup = new mapboxgl.Popup({
 map.on('mousemove', function (e) {
   // query for the features under the mouse
   var features = map.queryRenderedFeatures(e.point, {
-      layers: ['TOTAL ESSENTIAL WORKERS'],
+      layers: ['TOTAL ESSENTIAL WORKERS', 'PERCENT POPULATION VACCINATED'],
   });
 
   if (features.length > 0) {
     // show the popup
     // Populate the popup and set its coordinates based on the feature found.
     var hoveredFeature = features[0]
-    var name = PUMALookup(parseInt(hoveredFeature.properties.puma)).neighborhood
-    var esspopulation = numberWithCommas(hoveredFeature.properties.EssPop)
+    console.log(hoveredFeature)
+    if (hoveredFeature.layer.id === 'TOTAL ESSENTIAL WORKERS') {
+      var name = PUMALookup(parseInt(hoveredFeature.properties.puma)).neighborhood
+      var esspopulation = numberWithCommas(hoveredFeature.properties.EssPop)
 
-    var popupContent = `
-      <div>
-        <b>${name}</b><br/>
-        Essential Worker Count:${esspopulation}
-      </div>
-    `
+      var popupContent = `
+        <div>
+          <b>${name}</b><br/>
+          Essential Worker Count:${esspopulation}
+        </div>
+      `
 
-    popup.setLngLat(e.lngLat).setHTML(popupContent).addTo(map);
+      popup.setLngLat(e.lngLat).setHTML(popupContent).addTo(map);
+    } else {
+      var name = hoveredFeature.properties.Neighborho
+      var zip = hoveredFeature.properties.Zip
+      var alod = numberWithCommas(hoveredFeature.properties.ALOD)
+      var percalod = hoveredFeature.properties.Perc_ALOD
 
+      var popupContent = `
+        <div>
+          <h4>${name}</br>(Zip Code: ${zip})<h4>
+          <p class="popp">Total vaccinated with at least one dose: <b>${alod}</b></p>
+          <p class="popp">Percent vaccinated with at least one dose: <b>${percalod}</b>%</p>
+        </div>
+      `
+
+      popup.setLngLat(e.lngLat).setHTML(popupContent).addTo(map);
+    }
     // set this lot's polygon feature as the data for the highlight source
     map.getSource('highlight-feature').setData(hoveredFeature.geometry);
 
@@ -281,8 +298,11 @@ map.on('mousemove', function (e) {
   } else {
     // remove the Popup
     popup.remove();
-
     map.getCanvas().style.cursor = '';
+    map.getSource('highlight-feature').setData({
+          "type": "FeatureCollection",
+          "features": []
+      });
   }
 })
 
@@ -295,7 +315,12 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
 
   var link = document.createElement('a');
   link.href = '#';
-  link.className = 'active';
+  if (id === 'TOTAL ESSENTIAL WORKERS') {
+    link.className = 'active';
+  } else {
+    link.className = '';
+    // map.setLayoutProperty('PERCENT POPULATION VACCINATED', 'visibility', 'none');
+  }
   link.textContent = id;
 
   link.onclick = function (e) {
@@ -304,21 +329,14 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
     e.stopPropagation();
 
     var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+    //
+    map.setLayoutProperty('TOTAL ESSENTIAL WORKERS', 'visibility', 'none');
+    map.setLayoutProperty('PERCENT POPULATION VACCINATED', 'visibility', 'none');
 
-    // toggle layer visibility by changing the layout object's visibility property
-    if (visibility === 'visible') {
-      map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-      this.className = '';
-      if (clickedLayer === 'TOTAL ESSENTIAL WORKERS') {
-        map.setLayoutProperty('ess-outlines', 'visibility', 'none');
-      } else {map.setLayoutProperty('vacc-outlines', 'visibility', 'none')}
-    } else {
-      this.className = 'active';
-      map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-      if (clickedLayer === 'TOTAL ESSENTIAL WORKERS') {
-        map.setLayoutProperty('ess-outlines', 'visibility', 'visible');
-      } else {map.setLayoutProperty('vacc-outlines', 'visibility', 'visible')}
-    }
+    $('.active')[0].className = '';
+
+    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+    this.className = 'active';
   };
 
   var layers = document.getElementById('menu');
